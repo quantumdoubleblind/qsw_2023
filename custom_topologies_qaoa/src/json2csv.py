@@ -1,3 +1,7 @@
+# Copyright (c) 
+# SPDX-License-Identifier: GPL-2.0
+# coding: utf-8
+
 import csv
 from python2json import read_json
 import ast
