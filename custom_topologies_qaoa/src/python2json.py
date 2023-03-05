@@ -1,3 +1,7 @@
+# Copyright (c) 
+# SPDX-License-Identifier: GPL-2.0
+# coding: utf-8
+
 import json
 from datetime import datetime
 import numpy as np
