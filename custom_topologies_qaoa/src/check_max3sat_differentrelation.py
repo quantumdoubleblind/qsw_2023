@@ -1,3 +1,7 @@
+# Copyright (c) 
+# SPDX-License-Identifier: GPL-2.0
+# coding: utf-8
+
 import multiprocessing
 
 from qiskit.converters import circuit_to_dag
