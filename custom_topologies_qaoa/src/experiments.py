@@ -26,7 +26,7 @@ from multiprocessing import Pool
 
 class Experiment:
 
-    def __init__(self, problem):
+    def __init__(self, graph_density, opt_level, comp_averages, threads, problem, qaoa_layer):
         self.filename = "experiment"
         self.experiment_nr = "1"
         self.hardware = "use of fake backend brooklyn"
@@ -38,20 +38,18 @@ class Experiment:
         self.gate_set = self.config.basis_gates
         self.gate_keys = ['rz', 'sx', 'x', 'cx']
         self.gate_keys_swap = ['rz', 'sx', 'x', 'cx', 'swap']
-        self.problem_sizes = np.array([3, 4, 6, 9, 16, 25, 36, 49, 64, 81, 100])
-        # self.problem_sizes = np.array([6, 9, 16, 25, 36, 49, 64, 81, 100])
-        # self.problem_sizes = np.array([3, 4, 5, 6, 13, 22, 33, 46, 61, 78, 97])
-        self.graph_densities = np.array([0.7])
-        self.qaoa_layers = np.array([1])
+        self.problem_sizes = np.array([3, 4, 5, 6, 7, 8, 9, 10])
+        self.graph_densities = np.array([float(graph_density)])
+        self.qaoa_layers = np.array([int(qaoa_layer)])
         self.cmap_densities = np.array(
-            [0.013895, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
+           [0.013895, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
              0.9, 1.0])
         self.n_rows = 6
         self.n_cols = 3
         self.cmap = create_heavy_hex_IBMQ(self.n_rows, self.n_cols)
-        self.opt_level = 1  # 2 #3
-        self.comp_averages = 20
-        self.parallel_threads = 3
+        self.opt_level = int(opt_level)
+        self.comp_averages = int(comp_averages)
+        self.parallel_threads = int(threads)
 
     def find_active_qubits(self, circuit):
 
@@ -82,16 +80,20 @@ class Experiment:
         swap_count = []
 
         if self.problem_type == "tsp":
+            self.problem_sizes = [3]
             tsp_1 = tsp.TSP(2, 1)
             density_matrix, G = tsp_1.generate_problem_symm(problem_sizes, 0.7)
             qubo = tsp_1.generate_qubo(density_matrix, G)
         elif self.problem_type == "num_part":
+            self.problem_sizes = np.array([3, 4, 6, 9, 16, 25, 36, 49, 64, 81, 100])
             num_p = number_partitioning.NumberPartitioning(problem_sizes)
             qubo = num_p.generate_qubo(num_p.generate_problems(1, problem_sizes)[0])  # eins zu loop
         elif self.problem_type == "max3sat":
+            self.problem_sizes = np.array([6, 9, 16, 25, 36, 49, 64, 81, 100])
             max = max3sat.Max3Sat(3)
             qubo = max.generate_qubo(max.generate_problems(1, (3, problem_sizes))[0])  # eins zu loop
         elif self.problem_type == "maxcut":
+            self.problem_sizes = np.array([3, 4, 6, 9, 16, 25, 36, 49, 64, 81, 100])
             G = maxcut.generate_graph_from_density(problem_sizes, 0.7)
             qubo = get_qubo_maxcut(G)
         else:
@@ -171,12 +173,12 @@ class Experiment:
 
 
 if __name__ == "__main__":
-    problem_type = "tsp"
-    expr = Experiment(problem_type)
+    expr = Experiment(sys.argv[1],  sys.argv[2],  sys.argv[3],  sys.argv[4],  sys.argv[5],  sys.argv[6])
 
     e_name = "tsp_parallel"
     expr.experiments()
     try:
+        print("im here")
         expr.experiments()
     except Exception as e:
         f = open("errorlog.txt", "a")
