@@ -1,11 +1,4 @@
 #!/bin/sh
-problem_to_solve="tsp"
-graph_densitiy="0.7"
-count_layer="1"
-opt_level="1"
-comp_averages="3"
-parallel_threads="2"
-
 echo "What problem do you want to run: tsp, max3sat, maxcut or numpart"
 read -r problem_to_solve
 
@@ -26,7 +19,8 @@ read -r parallel_threads
 
 
 
-echo "Running the experiment for ${problem_to_solve}"
+echo "Running the experiment for ${problem_to_solve} with graph density ${graph_densitiy} for ${comp_averages} runs in
+${parallel_threads} parallel threads with ${count_layer} QAOA layer using a pptimization level of ${opt_level}"
 
 
 python qsw_2023/custom_topologies_qaoa/src/experiments.py "$graph_densitiy" "$opt_level" "$comp_averages" "$parallel_threads" "$problem_to_solve" "$count_layer"
