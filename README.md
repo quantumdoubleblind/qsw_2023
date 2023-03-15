@@ -12,7 +12,7 @@ git clone https://github.com/quantumdoubleblind/qsw_2023.git
 Build your docker image and run it afterwards:
 
 ```
-docker build -t "your-image-name"
+docker build -t "your-image-name" .
 docker run "your-image-name"
 ```
 Replace 'your-image-name' with a name of your choice and make sure to run these commands from the same directory as your Dockerfile.
